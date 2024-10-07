@@ -1,6 +1,47 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using signalr_chat.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddAuthentication(options =>
+{
+    // Set up default schemes for different contexts
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+   
+}).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Authentication:TokenSecret"]))
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            // Extract JWT from query string for SignalR
+            var accessToken = context.Request.Query["access_token"];
+            if (!string.IsNullOrEmpty(accessToken) && context.HttpContext.Request.Path.StartsWithSegments("/chathub"))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
+});
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddDbContext<ChatContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("ChatDbConnection")));
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -24,11 +65,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseDefaultFiles(); // Enables default files (e.g., index.html)
+app.UseStaticFiles(); // Allows serving static files from wwwroot
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapHub<ChatHub>("/chathub");
 app.MapControllers();
-
-app.MapFallbackToFile("/index.html");
 
 app.Run();

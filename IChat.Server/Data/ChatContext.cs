@@ -3,7 +3,7 @@ using Microsoft.VisualBasic;
 using IChat.Models;
 using System.Collections.Generic;
 
-namespace signalr_chat.Data
+namespace IChat.Data
 {
     public class ChatContext : DbContext
     {
