@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using signalr_chat.Data;
+using IChat.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,7 +70,7 @@ app.UseStaticFiles(); // Allows serving static files from wwwroot
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.MapFallbackToFile("/index.html");
 app.MapHub<ChatHub>("/chathub");
 app.MapControllers();
 
