@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Login from './components/accounts'; // Adjust path if needed
+import Login from './components/accounts/login'; // Adjust path if needed
 
 function App() {
   return (
