@@ -1,6 +1,6 @@
-// Login.jsx
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from React Router
 import Toastify from 'toastify-js';
 import './login.css'; // Updated path to use the new CSS file
 
@@ -8,6 +8,7 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate(); // Use navigate hook to programmatically navigate
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -38,7 +39,7 @@ const Login = () => {
                     text: data.message,
                     duration: 2000,
                 }).showToast();
-                setTimeout(() => (window.location.href = '/index.html'), 666);
+                setTimeout(() => navigate('/chat'), 666); // Use navigate to redirect to chat
             } else {
                 Toastify({
                     text: 'Username or password is incorrect, try again.',

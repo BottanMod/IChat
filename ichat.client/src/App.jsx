@@ -1,13 +1,17 @@
-
 import React from 'react';
-import Login from './components/accounts/login'; // Adjust path if needed
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './components/accounts/Login';
+import Chat from './components/Chat/Chat';
 
-function App() {
-  return (
-    <div className="App">
-      <Login /> {/* Render the Login component */}
-    </div>
-  );
-}
+const App = () => {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/chat" element={<Chat />} />
+            </Routes>
+        </Router>
+    );
+};
 
 export default App;
