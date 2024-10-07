@@ -1,0 +1,6 @@
+@IChat.Server_HostAddress = http://localhost:5037
+
+GET {{IChat.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
