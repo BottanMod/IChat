@@ -40,7 +40,8 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 builder.Services.AddDbContext<ChatContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("ChatDbConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ChatDbConnection")));
+
 
 
 builder.Services.AddControllers();

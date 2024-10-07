@@ -36,6 +36,18 @@ public class AuthController : ControllerBase
         return Ok(new { message = "User registered successfully" });
     }
 
+    [HttpGet("users")]
+    public IActionResult GetAllUsers()
+    {
+        var users = _context.Users.Select(u => new
+        {
+            Username = u.Username,
+            // Include any other fields you want to expose here.
+        }).ToList();
+
+        return Ok(users);
+    }
+
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginDto loginDto)
     {
