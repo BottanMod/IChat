@@ -5,6 +5,8 @@ using IChat.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using IChat.Server.DTOs;
+
 
 [ApiController]
 [Route("api/[controller]")]
@@ -35,6 +37,8 @@ public class AuthController : ControllerBase
 
         return Ok(new { message = "User registered successfully" });
     }
+
+   
 
     [HttpGet("users")]
     public IActionResult GetAllUsers()
@@ -67,7 +71,16 @@ public class AuthController : ControllerBase
         return Ok(new { Token = token });
     }
 
-    
+    [HttpGet("get-users")]
+    public IActionResult GetUsers()
+    {
+        var users = _context.Users.Select(u => new
+        {
+            Username = u.Username
+        }).ToList();
+
+        return Ok(users);
+    }
 
     private static string GenerateJwtToken(User user, string secret)
     {
@@ -78,7 +91,8 @@ public class AuthController : ControllerBase
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-          new Claim(ClaimTypes.Name, user.Username)
+          new Claim(ClaimTypes.Name, user.Username),
+          new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             }),
             Expires = DateTime.UtcNow.AddHours(2),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -87,4 +101,7 @@ public class AuthController : ControllerBase
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
+
+
+
 }

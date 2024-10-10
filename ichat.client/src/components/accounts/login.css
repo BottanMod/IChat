@@ -11,7 +11,7 @@ body {
     overflow: hidden;
 }
 
-.container {
+.login-container {
     position: relative;
     background: rgba(255, 255, 255, 0.15);
     border-radius: 15px;
@@ -55,7 +55,7 @@ h1 {
     }
 }
 
-input {
+.login-input {
     width: 100%;
     padding: 15px;
     margin: 15px 0;
@@ -68,15 +68,15 @@ input {
     transition: transform 0.2s ease;
 }
 
-    input:hover {
+    .login-input:hover {
         transform: scale(1.05);
     }
 
-    input::placeholder {
+    .login-input::placeholder {
         color: rgba(255, 255, 255, 0.7);
     }
 
-button {
+.login-button {
     width: 100%;
     padding: 15px;
     border-radius: 30px;
@@ -195,11 +195,11 @@ a {
     }
 }
 
-input:focus {
+.login-input:focus {
     background: rgba(255, 255, 255, 0.3);
     transform: scale(1.1);
 }
 
-button:active {
+.login-input:active {
     transform: scale(0.95);
 }

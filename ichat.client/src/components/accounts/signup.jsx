@@ -27,10 +27,10 @@ const ChatApp = () => {
 
       if (response.ok) {
         const data = await response.json();
-        sessionStorage.setItem('jwtToken', data.token);
+        localStorage.setItem('jwtToken', data.token);
         Toastify({
           text: data.message,
-          duration: 2000,
+          duration: 1000,
         }).showToast();
         setTimeout(() => (window.location.href = '/chat.html'), 666);
       } else {

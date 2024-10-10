@@ -3,8 +3,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using IChat.Data;
+//var key = Encoding.ASCII.GetBytes("ABBNbgINdtiZOci2sZSSaJZ2YyGmMMp6");
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+var tokenSecret = builder.Configuration["Authentication:TokenSecret"];
+var key = Encoding.ASCII.GetBytes(tokenSecret);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -19,7 +24,10 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Authentication:TokenSecret"]))
+
+        //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Authentication:TokenSecret"]))
+
+        IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 
     options.Events = new JwtBearerEvents
@@ -37,7 +45,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorization();
+//builder.Services.AddAuthorization();
 
 builder.Services.AddDbContext<ChatContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ChatDbConnection")));
@@ -45,9 +53,10 @@ builder.Services.AddDbContext<ChatContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
-        builder => builder.AllowAnyOrigin()
+        builder => builder.WithOrigins("https://localhost:5173")
                           .AllowAnyHeader()
-                          .AllowAnyMethod());
+                          .AllowAnyMethod()
+                          .AllowCredentials());
 });
 
 builder.Services.AddControllers();

@@ -57,11 +57,7 @@ namespace IChat.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Participant1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Participant2")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -91,6 +87,21 @@ namespace IChat.Server.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("IChat.Server.Models.UserConversation", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "ConversationId");
+
+                    b.HasIndex("ConversationId");
+
+                    b.ToTable("UserConversations");
+                });
+
             modelBuilder.Entity("IChat.Models.ChatMessage", b =>
                 {
                     b.HasOne("IChat.Models.Conversation", null)
@@ -98,9 +109,35 @@ namespace IChat.Server.Migrations
                         .HasForeignKey("ConversationId");
                 });
 
+            modelBuilder.Entity("IChat.Server.Models.UserConversation", b =>
+                {
+                    b.HasOne("IChat.Models.Conversation", "Conversation")
+                        .WithMany("UserConversations")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IChat.Models.User", "User")
+                        .WithMany("UserConversations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("IChat.Models.Conversation", b =>
                 {
                     b.Navigation("Messages");
+
+                    b.Navigation("UserConversations");
+                });
+
+            modelBuilder.Entity("IChat.Models.User", b =>
+                {
+                    b.Navigation("UserConversations");
                 });
 #pragma warning restore 612, 618
         }

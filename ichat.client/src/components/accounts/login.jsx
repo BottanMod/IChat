@@ -34,10 +34,10 @@ const Login = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                sessionStorage.setItem('jwtToken', data.token);
+                localStorage.setItem('jwtToken', data.token);
                 Toastify({
                     text: data.message,
-                    duration: 2000,
+                    duration: 1000,
                 }).showToast();
                 setTimeout(() => navigate('/chat'), 666); // Use navigate to redirect to chat
             } else {
@@ -56,10 +56,11 @@ const Login = () => {
     };
 
     return (
-        <div className="container">
+        <div className="login-container">
             <form id="loginForm" onSubmit={handleLogin}>
                 <h1>Login</h1>
                 <input
+                    className='login-input'
                     type="text"
                     id="username"
                     placeholder="Username"
@@ -68,6 +69,7 @@ const Login = () => {
                     required
                 />
                 <input
+                    className='login-input'
                     type="password"
                     id="password"
                     placeholder="Password"
@@ -75,7 +77,7 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <button type="submit">Login</button>
+                <button className='login-button' type="submit">Login</button>
                 <a href="/index.html">No account? Signup here!</a>
             </form>
 
