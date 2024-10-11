@@ -118,7 +118,7 @@ const Chat = () => {
         // Validate the conversationId format
         if (!isValidGuid(conversationId)) {
             console.error(`Invalid GUID format: ${conversationId}`);
-            return;  // Stop further execution if the conversationId is invalid
+            return; 
         }
 
         setSelectedConversationId(conversationId);

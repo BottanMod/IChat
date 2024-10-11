@@ -1,14 +1,14 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from React Router
+import { useNavigate } from 'react-router-dom'; 
 import Toastify from 'toastify-js';
-import './login.css'; // Updated path to use the new CSS file
+import './login.css'; 
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate(); // Use navigate hook to programmatically navigate
+    const navigate = useNavigate(); 
 
     const handleLogin = async (e) => {
         e.preventDefault();

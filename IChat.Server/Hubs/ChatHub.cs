@@ -37,7 +37,7 @@ public class ChatHub : Hub
                 await _context.SaveChangesAsync();
             }
 
-            // Save the message to the database under the general conversation
+            // Spara Konversation i general databas
             var chatMessage = new ChatMessage
             {
                 Username = user,
@@ -49,7 +49,7 @@ public class ChatHub : Hub
             _context.ChatMessages.Add(chatMessage);
             await _context.SaveChangesAsync();
 
-            // Broadcast the message to the group, including the user's name and conversation ID
+            
             await Clients.Group(conversationId).SendAsync("ReceiveMessage", chatMessage.Username, chatMessage.Message, conversationId);
         }
         else
@@ -59,7 +59,7 @@ public class ChatHub : Hub
                 throw new ArgumentException("Invalid conversationId");
             }
 
-            // Save the message to the database
+            // spara meddelande i databs för privat chat
             var chatMessage = new ChatMessage
             {
                 Username = user,
@@ -71,7 +71,7 @@ public class ChatHub : Hub
             _context.ChatMessages.Add(chatMessage);
             await _context.SaveChangesAsync();
 
-            // Broadcast the message to the group, including the user's name and conversation ID
+            
             await Clients.Group(conversationId).SendAsync("ReceiveMessage", chatMessage.Username, chatMessage.Message, conversationId);
         }
     }
@@ -79,7 +79,7 @@ public class ChatHub : Hub
     {
         _logger.LogInformation("Client connected: " + Context.ConnectionId);
 
-        // Ensure the general conversation exists
+        // Kolla generell konversation
         var generalConversation = await _context.Conversations
             .FirstOrDefaultAsync(c => c.Name == "General");
 
@@ -101,7 +101,7 @@ public class ChatHub : Hub
         await base.OnConnectedAsync();
     }
 
-    // Get all conversations available to the user
+    
     public async Task<List<Conversation>> GetConversations(string username)
     {
         var conversations = await _context.Conversations
@@ -117,7 +117,7 @@ public class ChatHub : Hub
         return conversations;
     }
 
-    // Other existing methods...
+
 
 
     public async Task<List<ChatMessage>> GetMessagesForConversation(Guid conversationId)
@@ -134,17 +134,17 @@ public class ChatHub : Hub
 
     public async Task JoinConversation(string conversationId, int userId)
     {
-        // Log the request
+        
         _logger.LogInformation($"JoinConversation called with conversationId: {conversationId}, userId: {userId}");
 
-        // 1. Validate if conversationId is a valid GUID
+       
         if (!Guid.TryParse(conversationId, out Guid parsedConversationId))
         {
             _logger.LogError($"Invalid GUID format for conversationId: {conversationId}");
             throw new ArgumentException("Invalid conversationId: The provided ID is not a valid GUID.");
         }
 
-        // 2. Check if the conversation exists
+
         var conversation = await _context.Conversations.FirstOrDefaultAsync(c => c.Id == parsedConversationId);
         if (conversation == null)
         {
@@ -152,13 +152,13 @@ public class ChatHub : Hub
             throw new ArgumentException("Invalid conversationId: The specified conversation does not exist.");
         }
 
-        // 3. Check if the user is already in the conversation
+       
         var existingUserConversation = await _context.UserConversations
             .FirstOrDefaultAsync(uc => uc.UserId == userId && uc.ConversationId == parsedConversationId);
 
         if (existingUserConversation == null)
         {
-            // 4. Add the user to the conversation if they are not part of it
+            
             var userConversation = new UserConversation
             {
                 UserId = userId,
@@ -175,7 +175,7 @@ public class ChatHub : Hub
             _logger.LogInformation($"User {userId} is already part of the conversation {parsedConversationId}.");
         }
 
-        // 5. Add the user's connection to the SignalR group for the conversation
+        // Add the user's connection to the SignalR group for the conversation
         await Groups.AddToGroupAsync(Context.ConnectionId, conversationId);
         _logger.LogInformation($"User {userId} joined SignalR group for conversation {conversationId}.");
     }
@@ -187,7 +187,7 @@ public class ChatHub : Hub
     {
         _logger.LogInformation($"{creatorUsername} is creating a private conversation with participants: {string.Join(", ", participants)}");
 
-        // Create a new conversation
+        
         var conversation = new Conversation
         {
             Id = Guid.NewGuid(),
@@ -196,7 +196,6 @@ public class ChatHub : Hub
 
         _context.Conversations.Add(conversation);
 
-        // Add each participant to the conversation
         foreach (var participant in participants)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == participant);

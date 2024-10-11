@@ -45,7 +45,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-//builder.Services.AddAuthorization();
+
 
 builder.Services.AddDbContext<ChatContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ChatDbConnection")));
@@ -74,7 +74,7 @@ app.UseCors("AllowAllOrigins");
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -82,8 +82,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseDefaultFiles(); // Enables default files (e.g., index.html)
-app.UseStaticFiles(); // Allows serving static files from wwwroot
+app.UseDefaultFiles();
+app.UseStaticFiles(); 
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

@@ -46,7 +46,7 @@ public class AuthController : ControllerBase
         var users = _context.Users.Select(u => new
         {
             Username = u.Username,
-            // Include any other fields you want to expose here.
+            
         }).ToList();
 
         return Ok(users);

@@ -11,17 +11,17 @@ namespace IChat.Data
 
         public ChatContext(DbContextOptions<ChatContext> options) : base(options) { }
 
-        public DbSet<ChatMessage> ChatMessages { get; set; } // The table of chat messages
+        public DbSet<ChatMessage> ChatMessages { get; set; }
 
-        public DbSet<User> Users { get; set; } // The table consisting of users
-        public DbSet<Conversation> Conversations { get; set; } // The table consisting of convos
+        public DbSet<User> Users { get; set; } 
+        public DbSet<Conversation> Conversations { get; set; }
         public DbSet<UserConversation> UserConversations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configure the many-to-many relationship between User and ChatRoom
+          
             modelBuilder.Entity<UserConversation>()
-                .HasKey(uc => new { uc.UserId, uc.ConversationId }); // Composite primary key
+                .HasKey(uc => new { uc.UserId, uc.ConversationId }); 
 
             modelBuilder.Entity<UserConversation>()
                 .HasOne(uc => uc.User)
